@@ -1,162 +1,68 @@
-# Book My Stay App 🏨
+Book My Stay – Use Case 5: Booking Request (First-Come-First-Served)
+Overview
 
-## 📌 Project Overview
+This project demonstrates a Hotel Booking Management System that handles booking requests in a fair, first-come-first-served manner. It focuses on core Java concepts and fundamental data structures, showing how queues can manage simultaneous requests while preserving order and fairness.
 
-**Book My Stay App** is a Java-based Hotel Booking Management System demonstrating real-world use of **OOP and data structures**.
+Use Case 5: Booking Request
 
-This use case focuses on implementing **safe, read-only room search functionality**.
+Goal:
+Handle multiple booking requests fairly by preserving the arrival order, without allocating rooms immediately.
 
----
+Actors:
 
-## 🚀 Use Case 4: Room Search & Availability Check
+Reservation – Represents a guest’s booking intent.
+Booking Request Queue – Stores incoming booking requests in FIFO order.
 
-### 🎯 Goal
+Flow:
 
-Enable users to **view available rooms without modifying system state**, ensuring safe and consistent data access.
+Guest submits a booking request.
+Request is added to the booking queue.
+Requests are stored in arrival order.
+Requests wait for processing; no inventory mutation occurs at this stage.
+Key Concepts
+Queue Data Structure: Queue<Reservation> using LinkedList ensures FIFO processing.
+FIFO Principle: Guarantees fairness; earliest requests are processed first.
+Decoupling Intake from Allocation: Requests are collected first and processed later, enabling controlled allocation during peak demand.
+Key Requirements
+Accept booking requests from guests.
+Store requests in a queue structure.
+Preserve request arrival order.
+Avoid any room allocation at this stage.
+Prepare requests for subsequent processing.
+Benefits
+Fair and deterministic booking request handling.
+Predictable system behavior under peak load.
+Simplified request coordination before allocation.
+How to Compile and Run
+javac UseCase5BookingRequestQueue.java
+java UseCase5BookingRequestQueue
+Sample Output
+=== Welcome to Book My Stay (Booking Request Queue) ===
 
----
+Options:
+1. Submit Booking Request
+2. View Booking Queue
+3. Exit
+   Enter choice: 1
+   Enter guest name: Alice
+   Enter number of rooms: 2
+   Booking request added for Alice
 
-## 👤 Actors
+Options:
+1. Submit Booking Request
+2. View Booking Queue
+3. Exit
+   Enter choice: 1
+   Enter guest name: Bob
+   Enter number of rooms: 1
+   Booking request added for Bob
 
-* **Guest** – Searches for available rooms
-* **Search Service** – Handles read-only operations
+Options:
+1. Submit Booking Request
+2. View Booking Queue
+3. Exit
+   Enter choice: 2
 
----
-
-## 🔄 Application Flow
-
-1. Guest initiates search
-2. Inventory provides availability data
-3. Room objects provide details
-4. Unavailable rooms are filtered
-5. Available rooms are displayed
-6. No changes are made to inventory
-
----
-
-## 🧠 Key Concepts Used
-
-### 🔹 Read-Only Access
-
-* Inventory is accessed without modification
-* Ensures system stability
-
-### 🔹 Defensive Programming
-
-* Only rooms with availability > 0 are shown
-
-### 🔹 Separation of Concerns
-
-* Search logic separated from booking and inventory updates
-
-### 🔹 Inventory as State Holder
-
-* Inventory stores availability
-* Search only reads from it
-
-### 🔹 Domain Model Usage
-
-* Room classes provide details like price and beds
-
-### 🔹 Validation Logic
-
-* Filters out unavailable rooms
-
----
-
-## ✅ Requirements Implemented
-
-* Centralized inventory access
-* Read-only search logic
-* Filtering unavailable rooms
-* Display room details + availability
-* No state modification
-
----
-
-## 💡 Key Benefits
-
-* Prevents accidental data modification
-* Ensures accurate availability display
-* Clean separation of read/write operations
-
----
-
-## ⚠️ Limitations
-
-* No booking functionality yet
-* No user input
-* Static data
-
----
-
-## 🔄 Improvement Over Use Case 3
-
-* Introduces clear separation between read and write operations
-* Prevents accidental inventory updates during search
-
----
-
-## 🛠️ How to Compile and Run
-
-### Step 1: Compile
-
-```bash id="cmd41"
-javac UseCase4RoomSearch.java
-```
-
-### Step 2: Run
-
-```bash id="cmd42"
-java UseCase4RoomSearch
-```
-
----
-
-## 📤 Sample Output
-
-```id="out41"
-Welcome to Book My Stay App!
-Version: v4.1
-
-Available Rooms:
-
-Room Type: Single Room
-Beds: 1
-Price: 1000.0
-Available: 5
-
-Room Type: Double Room
-Beds: 2
-Price: 1800.0
-Available: 3
-
-Search completed. No changes made to inventory.
-```
-
----
-
-## 📁 Project Structure
-
-```id="struct41"
-BookMyStayApp/
-│── UseCase4RoomSearch.java
-│── README.md
-```
-
----
-
-## 🔮 Future Enhancements
-
-* Add booking functionality
-* Prevent overbooking
-* Add filters (price, beds, etc.)
-* Integrate user input
-
----
-
-## 👨‍💻 Author
-
-Your Name
-
----
+Current Booking Queue (FIFO order):
+Reservation{Guest='Alice', Rooms=2}
+Reservation{Guest='Bob', Rooms=1}
