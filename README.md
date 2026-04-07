@@ -2,94 +2,109 @@
 
 ## 📌 Project Overview
 
-**Book My Stay App** is a Java-based Hotel Booking Management System designed to demonstrate core **Object-Oriented Programming (OOP)** concepts in real-world scenarios.
+**Book My Stay App** is a Hotel Booking Management System built using Core Java to demonstrate real-world applications of **data structures and object-oriented design**.
 
-This version (**Use Case 2**) focuses on modeling room types using abstraction and inheritance, while keeping availability static.
+This use case focuses on improving system design by introducing **centralized inventory management**.
 
 ---
 
-## 🚀 Use Case 2: Basic Room Types & Static Availability (Single File)
+## 🚀 Use Case 3: Centralized Room Inventory Management
 
 ### 🎯 Goal
 
-To introduce **object-oriented design** using:
-
-* Abstract classes
-* Inheritance
-* Polymorphism
-
-while keeping the implementation simple using a **single Java file**.
+To replace scattered availability variables with a **centralized data structure (HashMap)** and demonstrate efficient state management.
 
 ---
 
 ## 👤 Actor
 
-* User (runs the program to view room details and availability)
+* **RoomInventory** – Manages and controls room availability across the system
 
 ---
 
 ## 🔄 Application Flow
 
-1. User runs the application
-2. Room objects are created (Single, Double, Suite)
-3. Availability is stored in variables
-4. Room details and availability are displayed
-5. Application exits
+1. Inventory system is initialized
+2. Room types and availability are stored in a HashMap
+3. Availability is accessed using keys (room types)
+4. Updates are performed through controlled methods
+5. Inventory state is displayed
 
 ---
 
 ## 🧠 Key Concepts Used
 
-### 🔹 Abstract Class
+### 🔹 Problem of Scattered State
 
-* `Room` is an abstract class
-* Defines common properties like room type, beds, and price
+* Previous use case used multiple variables
+* Difficult to maintain and scale
 
-### 🔹 Inheritance
+### 🔹 HashMap
 
-* `SingleRoom`, `DoubleRoom`, `SuiteRoom` extend `Room`
-* Reuse common logic and specialize behavior
+* Stores room type → availability
+* Example:
 
-### 🔹 Polymorphism
+  ```java
+  Map<String, Integer>
+  ```
 
-* Objects are handled using `Room` reference
-* Enables flexibility and scalability
+### 🔹 O(1) Lookup
+
+* Fast access using keys
+* Efficient for frequent operations
+
+### 🔹 Single Source of Truth
+
+* All data stored in one place
+* Prevents inconsistency
 
 ### 🔹 Encapsulation
 
-* Fields are private
-* Accessed via getter methods
+* Inventory logic hidden inside `RoomInventory` class
+* Access only through methods
 
-### 🔹 Static Availability
+### 🔹 Separation of Concerns
 
-* Availability stored in simple variables
-* Demonstrates limitations of hardcoded data
+* Inventory → manages availability
+* Room → defines room details
+
+### 🔹 Scalability
+
+* New room type = just add a new entry
+* No code changes required elsewhere
 
 ---
 
 ## ✅ Requirements Implemented
 
-* Abstract `Room` class
-* Concrete room classes
-* Object initialization in `main()`
-* Static availability variables
-* Console output for room details
+* HashMap used for storage
+* Inventory initialized via constructor
+* Methods for get/update/display
+* Centralized availability management
 
 ---
 
 ## 💡 Key Benefits
 
-* Clear understanding of OOP fundamentals
-* Simple and beginner-friendly structure
-* Strong base for future enhancements
+* Consistent system state
+* Fast lookups and updates
+* Easy to scale and extend
 
 ---
 
 ## ⚠️ Limitations
 
-* Availability is hardcoded
-* No dynamic updates or booking logic
-* Not scalable for real systems
+* No validation for negative updates
+* No booking workflow yet
+* Console-based only
+
+---
+
+## 🔄 Improvement Over Use Case 2
+
+* Eliminates multiple availability variables
+* Introduces centralized control
+* Improves maintainability and scalability
 
 ---
 
@@ -97,38 +112,35 @@ while keeping the implementation simple using a **single Java file**.
 
 ### Step 1: Compile
 
-```bash id="m9q2x1"
-javac UseCase2RoomInitialization.java
+```bash id="cmd31"
+javac UseCase3InventorySetup.java
 ```
 
 ### Step 2: Run
 
-```bash id="k4d8zp"
-java UseCase2RoomInitialization
+```bash id="cmd32"
+java UseCase3InventorySetup
 ```
 
 ---
 
 ## 📤 Sample Output
 
-```id="c7wq9a"
+```id="out31"
 Welcome to Book My Stay App!
-Version: v2.1
+Version: v3.1
 
-Room Type: Single Room
-Beds: 1
-Price: 1000.0
-Available: 5
+Current Room Inventory:
+Single Room -> Available: 5
+Double Room -> Available: 3
+Suite Room -> Available: 2
 
-Room Type: Double Room
-Beds: 2
-Price: 1800.0
-Available: 3
+Updating Single Room availability...
 
-Room Type: Suite Room
-Beds: 3
-Price: 3000.0
-Available: 2
+Current Room Inventory:
+Single Room -> Available: 4
+Double Room -> Available: 3
+Suite Room -> Available: 2
 
 Application finished.
 ```
@@ -137,9 +149,9 @@ Application finished.
 
 ## 📁 Project Structure
 
-```id="v3p8sn"
+```id="struct31"
 BookMyStayApp/
-│── UseCase2RoomInitialization.java
+│── UseCase3InventorySetup.java
 │── README.md
 ```
 
@@ -147,10 +159,11 @@ BookMyStayApp/
 
 ## 🔮 Future Enhancements
 
-* Use arrays or collections for room storage
-* Implement booking functionality
-* Add user input handling
-* Introduce inventory management system
+* Integrate booking system
+* Prevent overbooking
+* Add user input
+* Use advanced data structures (Queue, Priority Queue)
+* Persist data using files or database
 
 ---
 
