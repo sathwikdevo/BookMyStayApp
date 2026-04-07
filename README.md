@@ -2,109 +2,98 @@
 
 ## 📌 Project Overview
 
-**Book My Stay App** is a Hotel Booking Management System built using Core Java to demonstrate real-world applications of **data structures and object-oriented design**.
+**Book My Stay App** is a Java-based Hotel Booking Management System demonstrating real-world use of **OOP and data structures**.
 
-This use case focuses on improving system design by introducing **centralized inventory management**.
+This use case focuses on implementing **safe, read-only room search functionality**.
 
 ---
 
-## 🚀 Use Case 3: Centralized Room Inventory Management
+## 🚀 Use Case 4: Room Search & Availability Check
 
 ### 🎯 Goal
 
-To replace scattered availability variables with a **centralized data structure (HashMap)** and demonstrate efficient state management.
+Enable users to **view available rooms without modifying system state**, ensuring safe and consistent data access.
 
 ---
 
-## 👤 Actor
+## 👤 Actors
 
-* **RoomInventory** – Manages and controls room availability across the system
+* **Guest** – Searches for available rooms
+* **Search Service** – Handles read-only operations
 
 ---
 
 ## 🔄 Application Flow
 
-1. Inventory system is initialized
-2. Room types and availability are stored in a HashMap
-3. Availability is accessed using keys (room types)
-4. Updates are performed through controlled methods
-5. Inventory state is displayed
+1. Guest initiates search
+2. Inventory provides availability data
+3. Room objects provide details
+4. Unavailable rooms are filtered
+5. Available rooms are displayed
+6. No changes are made to inventory
 
 ---
 
 ## 🧠 Key Concepts Used
 
-### 🔹 Problem of Scattered State
+### 🔹 Read-Only Access
 
-* Previous use case used multiple variables
-* Difficult to maintain and scale
+* Inventory is accessed without modification
+* Ensures system stability
 
-### 🔹 HashMap
+### 🔹 Defensive Programming
 
-* Stores room type → availability
-* Example:
-
-  ```java
-  Map<String, Integer>
-  ```
-
-### 🔹 O(1) Lookup
-
-* Fast access using keys
-* Efficient for frequent operations
-
-### 🔹 Single Source of Truth
-
-* All data stored in one place
-* Prevents inconsistency
-
-### 🔹 Encapsulation
-
-* Inventory logic hidden inside `RoomInventory` class
-* Access only through methods
+* Only rooms with availability > 0 are shown
 
 ### 🔹 Separation of Concerns
 
-* Inventory → manages availability
-* Room → defines room details
+* Search logic separated from booking and inventory updates
 
-### 🔹 Scalability
+### 🔹 Inventory as State Holder
 
-* New room type = just add a new entry
-* No code changes required elsewhere
+* Inventory stores availability
+* Search only reads from it
+
+### 🔹 Domain Model Usage
+
+* Room classes provide details like price and beds
+
+### 🔹 Validation Logic
+
+* Filters out unavailable rooms
 
 ---
 
 ## ✅ Requirements Implemented
 
-* HashMap used for storage
-* Inventory initialized via constructor
-* Methods for get/update/display
-* Centralized availability management
+* Centralized inventory access
+* Read-only search logic
+* Filtering unavailable rooms
+* Display room details + availability
+* No state modification
 
 ---
 
 ## 💡 Key Benefits
 
-* Consistent system state
-* Fast lookups and updates
-* Easy to scale and extend
+* Prevents accidental data modification
+* Ensures accurate availability display
+* Clean separation of read/write operations
 
 ---
 
 ## ⚠️ Limitations
 
-* No validation for negative updates
-* No booking workflow yet
-* Console-based only
+* No booking functionality yet
+* No user input
+* Static data
 
 ---
 
-## 🔄 Improvement Over Use Case 2
+## 🔄 Improvement Over Use Case 3
 
-* Eliminates multiple availability variables
-* Introduces centralized control
-* Improves maintainability and scalability
+* Introduces clear separation between read and write operations
+* Prevents accidental inventory updates during search
 
 ---
 
@@ -112,46 +101,46 @@ To replace scattered availability variables with a **centralized data structure 
 
 ### Step 1: Compile
 
-```bash id="cmd31"
-javac UseCase3InventorySetup.java
+```bash id="cmd41"
+javac UseCase4RoomSearch.java
 ```
 
 ### Step 2: Run
 
-```bash id="cmd32"
-java UseCase3InventorySetup
+```bash id="cmd42"
+java UseCase4RoomSearch
 ```
 
 ---
 
 ## 📤 Sample Output
 
-```id="out31"
+```id="out41"
 Welcome to Book My Stay App!
-Version: v3.1
+Version: v4.1
 
-Current Room Inventory:
-Single Room -> Available: 5
-Double Room -> Available: 3
-Suite Room -> Available: 2
+Available Rooms:
 
-Updating Single Room availability...
+Room Type: Single Room
+Beds: 1
+Price: 1000.0
+Available: 5
 
-Current Room Inventory:
-Single Room -> Available: 4
-Double Room -> Available: 3
-Suite Room -> Available: 2
+Room Type: Double Room
+Beds: 2
+Price: 1800.0
+Available: 3
 
-Application finished.
+Search completed. No changes made to inventory.
 ```
 
 ---
 
 ## 📁 Project Structure
 
-```id="struct31"
+```id="struct41"
 BookMyStayApp/
-│── UseCase3InventorySetup.java
+│── UseCase4RoomSearch.java
 │── README.md
 ```
 
@@ -159,11 +148,10 @@ BookMyStayApp/
 
 ## 🔮 Future Enhancements
 
-* Integrate booking system
+* Add booking functionality
 * Prevent overbooking
-* Add user input
-* Use advanced data structures (Queue, Priority Queue)
-* Persist data using files or database
+* Add filters (price, beds, etc.)
+* Integrate user input
 
 ---
 
