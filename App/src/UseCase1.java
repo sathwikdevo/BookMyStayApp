@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.concurrent.*;
 
 // Custom exception for invalid bookings
 class InvalidBookingException extends Exception {
@@ -37,23 +38,19 @@ class Reservation {
     }
 }
 
-// Inventory Manager with rollback support
+// Thread-safe Inventory Manager
 class InventoryManager {
-    private Map<String, Integer> roomInventory;
-    private Map<String, Reservation> confirmedReservations; // Track confirmed bookings
-    private Stack<String> rollbackStack; // Stack for last cancelled reservations
+    private final Map<String, Integer> roomInventory = new HashMap<>();
+    private final Map<String, Reservation> confirmedReservations = new ConcurrentHashMap<>();
 
     public InventoryManager() {
-        roomInventory = new HashMap<>();
         roomInventory.put("Single", 5);
         roomInventory.put("Double", 5);
         roomInventory.put("Suite", 2);
-        confirmedReservations = new HashMap<>();
-        rollbackStack = new Stack<>();
     }
 
-    // Validate and confirm a booking
-    public void validateAndBook(Reservation res) throws InvalidBookingException {
+    // Synchronized booking to ensure thread safety
+    public synchronized void bookRoom(Reservation res) throws InvalidBookingException {
         String type = res.getRoomType();
         int requested = res.getNumberOfRooms();
 
@@ -69,31 +66,12 @@ class InventoryManager {
             throw new InvalidBookingException("Not enough rooms available. Requested: " + requested + ", Available: " + available);
         }
 
-        // All validations passed, update inventory and record booking
         roomInventory.put(type, available - requested);
         confirmedReservations.put(res.getReservationId(), res);
-        System.out.println("Booking confirmed: " + res);
+        System.out.println(Thread.currentThread().getName() + " booked: " + res);
     }
 
-    // Cancel a booking safely
-    public void cancelBooking(String reservationId) throws InvalidBookingException {
-        if (!confirmedReservations.containsKey(reservationId)) {
-            throw new InvalidBookingException("Reservation not found or already cancelled: " + reservationId);
-        }
-
-        Reservation res = confirmedReservations.get(reservationId);
-        // Restore inventory
-        String type = res.getRoomType();
-        int current = roomInventory.get(type);
-        roomInventory.put(type, current + res.getNumberOfRooms());
-
-        // Record in rollback stack
-        rollbackStack.push(reservationId);
-        confirmedReservations.remove(reservationId);
-        System.out.println("Booking cancelled successfully: " + res);
-    }
-
-    public void displayInventory() {
+    public synchronized void displayInventory() {
         System.out.println("\nCurrent Room Inventory:");
         roomInventory.forEach((type, count) -> System.out.println(type + ": " + count + " rooms available"));
     }
@@ -106,93 +84,60 @@ class InventoryManager {
         System.out.println("\nConfirmed Bookings:");
         confirmedReservations.values().forEach(System.out::println);
     }
+}
 
-    public void displayRollbackHistory() {
-        if (rollbackStack.isEmpty()) {
-            System.out.println("No cancellations yet.");
-            return;
+// Booking Task for threads
+class BookingTask implements Runnable {
+    private final InventoryManager manager;
+    private final Reservation reservation;
+
+    public BookingTask(InventoryManager manager, Reservation reservation) {
+        this.manager = manager;
+        this.reservation = reservation;
+    }
+
+    @Override
+    public void run() {
+        try {
+            manager.bookRoom(reservation);
+        } catch (InvalidBookingException e) {
+            System.out.println(Thread.currentThread().getName() + " booking failed: " + e.getMessage());
         }
-        System.out.println("\nRollback History (Most Recent First):");
-        rollbackStack.forEach(id -> System.out.println("Cancelled Reservation ID: " + id));
     }
 }
 
 // Main program
-public class UseCase10BookingCancellation {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        InventoryManager inventoryManager = new InventoryManager();
+public class UseCase11ConcurrentBookingSimulation {
+    public static void main(String[] args) throws InterruptedException {
+        InventoryManager manager = new InventoryManager();
 
-        boolean running = true;
-        System.out.println("=== Book My Stay – Booking Cancellation & Inventory Rollback ===");
+        // Shared booking queue
+        Queue<Reservation> bookingQueue = new ConcurrentLinkedQueue<>();
 
-        while (running) {
-            System.out.println("\nOptions:");
-            System.out.println("1. Make a Booking");
-            System.out.println("2. Cancel a Booking");
-            System.out.println("3. View Inventory");
-            System.out.println("4. View Confirmed Bookings");
-            System.out.println("5. View Rollback History");
-            System.out.println("6. Exit");
-            System.out.print("Enter choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+        // Simulate multiple guests submitting requests
+        bookingQueue.add(new Reservation("R001", "Alice", "Single", 2));
+        bookingQueue.add(new Reservation("R002", "Bob", "Double", 1));
+        bookingQueue.add(new Reservation("R003", "Charlie", "Suite", 1));
+        bookingQueue.add(new Reservation("R004", "Diana", "Single", 1));
+        bookingQueue.add(new Reservation("R005", "Eve", "Double", 3));
 
-            switch (choice) {
-                case 1:
-                    try {
-                        System.out.print("Enter Reservation ID: ");
-                        String id = scanner.nextLine();
-                        System.out.print("Enter Guest Name: ");
-                        String name = scanner.nextLine();
-                        System.out.print("Enter Room Type (Single/Double/Suite): ");
-                        String roomType = scanner.nextLine();
-                        System.out.print("Enter Number of Rooms: ");
-                        int numRooms = scanner.nextInt();
-                        scanner.nextLine();
-
-                        Reservation reservation = new Reservation(id, name, roomType, numRooms);
-                        inventoryManager.validateAndBook(reservation);
-                    } catch (InvalidBookingException e) {
-                        System.out.println("Booking failed: " + e.getMessage());
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input type. Please try again.");
-                        scanner.nextLine(); // clear scanner buffer
-                    }
-                    break;
-
-                case 2:
-                    try {
-                        System.out.print("Enter Reservation ID to cancel: ");
-                        String cancelId = scanner.nextLine();
-                        inventoryManager.cancelBooking(cancelId);
-                    } catch (InvalidBookingException e) {
-                        System.out.println("Cancellation failed: " + e.getMessage());
-                    }
-                    break;
-
-                case 3:
-                    inventoryManager.displayInventory();
-                    break;
-
-                case 4:
-                    inventoryManager.displayConfirmedBookings();
-                    break;
-
-                case 5:
-                    inventoryManager.displayRollbackHistory();
-                    break;
-
-                case 6:
-                    running = false;
-                    System.out.println("Exiting...");
-                    break;
-
-                default:
-                    System.out.println("Invalid choice. Try again.");
-            }
+        List<Thread> threads = new ArrayList<>();
+        while (!bookingQueue.isEmpty()) {
+            Reservation res = bookingQueue.poll();
+            Thread t = new Thread(new BookingTask(manager, res));
+            t.setName("GuestThread-" + res.getReservationId());
+            threads.add(t);
+            t.start();
         }
 
-        scanner.close();
+        // Wait for all threads to finish
+        for (Thread t : threads) {
+            t.join();
+        }
+
+        // Display final results
+        System.out.println("\n=== Final Booking State ===");
+        manager.displayConfirmedBookings();
+        manager.displayInventory();
     }
 }
