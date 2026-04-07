@@ -1,6 +1,13 @@
 import java.util.*;
 
-// Simple Reservation class
+// Custom exception for invalid bookings
+class InvalidBookingException extends Exception {
+    public InvalidBookingException(String message) {
+        super(message);
+    }
+}
+
+// Reservation class
 class Reservation {
     private String reservationId;
     private String guestName;
@@ -30,94 +37,91 @@ class Reservation {
     }
 }
 
-// Booking history class
-class BookingHistory {
-    private List<Reservation> confirmedReservations;
+// Inventory Manager
+class InventoryManager {
+    private Map<String, Integer> roomInventory;
 
-    public BookingHistory() {
-        confirmedReservations = new ArrayList<>();
+    public InventoryManager() {
+        roomInventory = new HashMap<>();
+        roomInventory.put("Single", 5);
+        roomInventory.put("Double", 5);
+        roomInventory.put("Suite", 2);
     }
 
-    public void addReservation(Reservation reservation) {
-        confirmedReservations.add(reservation);
-        System.out.println("Reservation added to history: " + reservation.getReservationId());
+    public void validateAndBook(Reservation res) throws InvalidBookingException {
+        String type = res.getRoomType();
+        int requested = res.getNumberOfRooms();
+
+        if (!roomInventory.containsKey(type)) {
+            throw new InvalidBookingException("Invalid room type: " + type);
+        }
+
+        int available = roomInventory.get(type);
+        if (requested <= 0) {
+            throw new InvalidBookingException("Number of rooms must be positive.");
+        }
+
+        if (requested > available) {
+            throw new InvalidBookingException("Not enough rooms available. Requested: " + requested + ", Available: " + available);
+        }
+
+        // All validations passed, update inventory
+        roomInventory.put(type, available - requested);
+        System.out.println("Booking confirmed: " + res);
     }
 
-    public List<Reservation> getAllReservations() {
-        return Collections.unmodifiableList(confirmedReservations);
+    public void displayInventory() {
+        System.out.println("\nCurrent Room Inventory:");
+        roomInventory.forEach((type, count) -> System.out.println(type + ": " + count + " rooms available"));
     }
 }
 
-// Reporting service
-class BookingReportService {
-    private BookingHistory bookingHistory;
-
-    public BookingReportService(BookingHistory bookingHistory) {
-        this.bookingHistory = bookingHistory;
-    }
-
-    public void displayAllReservations() {
-        System.out.println("\n=== All Confirmed Reservations ===");
-        for (Reservation r : bookingHistory.getAllReservations()) {
-            System.out.println(r);
-        }
-    }
-
-    public void displaySummaryByRoomType() {
-        System.out.println("\n=== Summary by Room Type ===");
-        Map<String, Integer> summary = new HashMap<>();
-        for (Reservation r : bookingHistory.getAllReservations()) {
-            summary.put(r.getRoomType(), summary.getOrDefault(r.getRoomType(), 0) + r.getNumberOfRooms());
-        }
-        summary.forEach((roomType, count) -> System.out.println(roomType + ": " + count + " rooms booked"));
-    }
-}
-
-// Main program
-public class UseCase8 {
+// Main program with corrected class name
+public class UseCase9-ExceptionHandling {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        BookingHistory history = new BookingHistory();
-        BookingReportService reportService = new BookingReportService(history);
+        InventoryManager inventoryManager = new InventoryManager();
 
         boolean running = true;
-        System.out.println("=== Book My Stay – Booking History & Reporting ===");
+        System.out.println("=== Book My Stay – Error Handling & Validation ===");
 
         while (running) {
             System.out.println("\nOptions:");
-            System.out.println("1. Add Confirmed Reservation");
-            System.out.println("2. View All Reservations");
-            System.out.println("3. View Summary by Room Type");
-            System.out.println("4. Exit");
+            System.out.println("1. Make a Booking");
+            System.out.println("2. View Inventory");
+            System.out.println("3. Exit");
             System.out.print("Enter choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter Reservation ID: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Enter Guest Name: ");
-                    String name = scanner.nextLine();
-                    System.out.print("Enter Room Type (Single/Double/Suite): ");
-                    String roomType = scanner.nextLine();
-                    System.out.print("Enter Number of Rooms: ");
-                    int numRooms = scanner.nextInt();
-                    scanner.nextLine();
+                    try {
+                        System.out.print("Enter Reservation ID: ");
+                        String id = scanner.nextLine();
+                        System.out.print("Enter Guest Name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter Room Type (Single/Double/Suite): ");
+                        String roomType = scanner.nextLine();
+                        System.out.print("Enter Number of Rooms: ");
+                        int numRooms = scanner.nextInt();
+                        scanner.nextLine();
 
-                    Reservation reservation = new Reservation(id, name, roomType, numRooms);
-                    history.addReservation(reservation);
+                        Reservation reservation = new Reservation(id, name, roomType, numRooms);
+                        inventoryManager.validateAndBook(reservation);
+                    } catch (InvalidBookingException e) {
+                        System.out.println("Booking failed: " + e.getMessage());
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input type. Please try again.");
+                        scanner.nextLine(); // clear scanner buffer
+                    }
                     break;
 
                 case 2:
-                    reportService.displayAllReservations();
+                    inventoryManager.displayInventory();
                     break;
 
                 case 3:
-                    reportService.displaySummaryByRoomType();
-                    break;
-
-                case 4:
                     running = false;
                     System.out.println("Exiting...");
                     break;
