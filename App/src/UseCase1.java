@@ -1,29 +1,111 @@
 /**
- * UseCase1HotelBookingApp
+ * UseCase2RoomInitialization
  *
- * This class represents the entry point of the Hotel Booking Application.
- * It demonstrates how a Java program starts execution and prints
- * a welcome message to the console.
+ * Demonstrates abstraction, inheritance, and polymorphism
+ * using different room types with static availability.
  *
  * @author YourName
- * @version 1.0
+ * @version 2.1
  */
-public class UseCase1{
 
-    /**
-     * Main method - Entry point of the application
-     * @param args Command line arguments
-     */
+// Abstract class
+abstract class Room {
+    private String roomType;
+    private int beds;
+    private double price;
+
+    public Room(String roomType, int beds, double price) {
+        this.roomType = roomType;
+        this.beds = beds;
+        this.price = price;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public int getBeds() {
+        return beds;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    // Abstract method
+    public abstract void displayDetails();
+}
+
+// Single Room class
+class SingleRoom extends Room {
+    public SingleRoom() {
+        super("Single Room", 1, 1000);
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Room Type: " + getRoomType());
+        System.out.println("Beds: " + getBeds());
+        System.out.println("Price: " + getPrice());
+    }
+}
+
+// Double Room class
+class DoubleRoom extends Room {
+    public DoubleRoom() {
+        super("Double Room", 2, 1800);
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Room Type: " + getRoomType());
+        System.out.println("Beds: " + getBeds());
+        System.out.println("Price: " + getPrice());
+    }
+}
+
+// Suite Room class
+class SuiteRoom extends Room {
+    public SuiteRoom() {
+        super("Suite Room", 3, 3000);
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Room Type: " + getRoomType());
+        System.out.println("Beds: " + getBeds());
+        System.out.println("Price: " + getPrice());
+    }
+}
+
+// Main class
+public class UseCase2{
+
     public static void main(String[] args) {
 
-        // Print welcome message
         System.out.println("Welcome to Book My Stay App!");
+        System.out.println("Version: v2.1\n");
 
-        // Print application details
-        System.out.println("Application Name: Hotel Booking System");
-        System.out.println("Version: v1.0");
+        // Create room objects (Polymorphism)
+        Room single = new SingleRoom();
+        Room doubleRoom = new DoubleRoom();
+        Room suite = new SuiteRoom();
 
-        // Indicate program execution completed
-        System.out.println("Application started successfully. Exiting now...");
+        // Static availability variables
+        int singleAvailable = 5;
+        int doubleAvailable = 3;
+        int suiteAvailable = 2;
+
+        // Display details
+        single.displayDetails();
+        System.out.println("Available: " + singleAvailable + "\n");
+
+        doubleRoom.displayDetails();
+        System.out.println("Available: " + doubleAvailable + "\n");
+
+        suite.displayDetails();
+        System.out.println("Available: " + suiteAvailable + "\n");
+
+        System.out.println("Application finished.");
     }
 }

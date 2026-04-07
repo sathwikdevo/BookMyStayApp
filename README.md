@@ -1,74 +1,95 @@
-# BookMyStayApp
 # Book My Stay App 🏨
 
 ## 📌 Project Overview
 
-**Book My Stay App** is a Hotel Booking Management System designed to demonstrate the practical application of **Core Java** and fundamental **data structures** in real-world scenarios.
+**Book My Stay App** is a Java-based Hotel Booking Management System designed to demonstrate core **Object-Oriented Programming (OOP)** concepts in real-world scenarios.
 
-The project is developed incrementally through multiple use cases. Each use case focuses on solving common software engineering challenges such as:
-
-* Fair request handling
-* Inventory consistency
-* Prevention of double-booking
-
-This approach emphasizes understanding **how and why data structures are used** in scalable and maintainable systems.
+This version (**Use Case 2**) focuses on modeling room types using abstraction and inheritance, while keeping availability static.
 
 ---
 
-## 🚀 Use Case 1: Application Entry & Welcome Message
+## 🚀 Use Case 2: Basic Room Types & Static Availability (Single File)
 
 ### 🎯 Goal
 
-To establish a clear and predictable starting point for the application by demonstrating how a Java program begins execution and produces console output.
+To introduce **object-oriented design** using:
+
+* Abstract classes
+* Inheritance
+* Polymorphism
+
+while keeping the implementation simple using a **single Java file**.
 
 ---
 
 ## 👤 Actor
 
-* User (runs the application via command line or IDE)
+* User (runs the program to view room details and availability)
 
 ---
 
 ## 🔄 Application Flow
 
 1. User runs the application
-2. JVM invokes the `main()` method
-3. Application prints a welcome message
-4. Displays application name and version
-5. Application terminates
+2. Room objects are created (Single, Double, Suite)
+3. Availability is stored in variables
+4. Room details and availability are displayed
+5. Application exits
 
 ---
 
-## 🧠 Key Concepts Covered
+## 🧠 Key Concepts Used
 
-* **Class** – Defines the structure and acts as a container for the program
-* **main() Method** – Entry point of the Java application
-* **static Keyword** – Allows execution without object creation
-* **Console Output** – Using `System.out.println()`
-* **String Literals** – Immutable text values stored in memory
-* **Method Invocation** – Calling methods on objects
-* **Application Flow** – Sequential execution of statements
-* **JavaDoc Comments** – Documentation for maintainability
-* **JavaDoc Annotations** – Metadata like `@author`, `@version`
+### 🔹 Abstract Class
+
+* `Room` is an abstract class
+* Defines common properties like room type, beds, and price
+
+### 🔹 Inheritance
+
+* `SingleRoom`, `DoubleRoom`, `SuiteRoom` extend `Room`
+* Reuse common logic and specialize behavior
+
+### 🔹 Polymorphism
+
+* Objects are handled using `Room` reference
+* Enables flexibility and scalability
+
+### 🔹 Encapsulation
+
+* Fields are private
+* Accessed via getter methods
+
+### 🔹 Static Availability
+
+* Availability stored in simple variables
+* Demonstrates limitations of hardcoded data
 
 ---
 
-## ✅ Requirements
+## ✅ Requirements Implemented
 
-* Create a Java class as the entry point
-* Implement `public static void main(String[] args)`
-* Print welcome message
-* Display application name and version
-* Use JavaDoc comments
-* Ensure error-free execution
+* Abstract `Room` class
+* Concrete room classes
+* Object initialization in `main()`
+* Static availability variables
+* Console output for room details
 
 ---
 
 ## 💡 Key Benefits
 
-* Clear and predictable startup behavior
-* Single entry point for execution
-* Easy debugging for beginners
+* Clear understanding of OOP fundamentals
+* Simple and beginner-friendly structure
+* Strong base for future enhancements
+
+---
+
+## ⚠️ Limitations
+
+* Availability is hardcoded
+* No dynamic updates or booking logic
+* Not scalable for real systems
 
 ---
 
@@ -76,34 +97,49 @@ To establish a clear and predictable starting point for the application by demon
 
 ### Step 1: Compile
 
-```bash
-javac UseCase1HotelBookingApp.java
+```bash id="m9q2x1"
+javac UseCase2RoomInitialization.java
 ```
 
 ### Step 2: Run
 
-```bash
-java UseCase1HotelBookingApp
+```bash id="k4d8zp"
+java UseCase2RoomInitialization
 ```
 
 ---
 
 ## 📤 Sample Output
 
-```
+```id="c7wq9a"
 Welcome to Book My Stay App!
-Application Name: Hotel Booking System
-Version: v1.0
-Application started successfully. Exiting now...
+Version: v2.1
+
+Room Type: Single Room
+Beds: 1
+Price: 1000.0
+Available: 5
+
+Room Type: Double Room
+Beds: 2
+Price: 1800.0
+Available: 3
+
+Room Type: Suite Room
+Beds: 3
+Price: 3000.0
+Available: 2
+
+Application finished.
 ```
 
 ---
 
 ## 📁 Project Structure
 
-```
+```id="v3p8sn"
 BookMyStayApp/
-│── UseCase1HotelBookingApp.java
+│── UseCase2RoomInitialization.java
 │── README.md
 ```
 
@@ -111,11 +147,10 @@ BookMyStayApp/
 
 ## 🔮 Future Enhancements
 
-* User input handling
-* Room inventory management
-* Booking system with validation
-* Data structure integration (Queues, Maps, etc.)
-* Prevention of double booking
+* Use arrays or collections for room storage
+* Implement booking functionality
+* Add user input handling
+* Introduce inventory management system
 
 ---
 
