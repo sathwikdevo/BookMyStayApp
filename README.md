@@ -1,126 +1,68 @@
-# BookMyStayApp
-# Book My Stay App 🏨
+Book My Stay – Use Case 5: Booking Request (First-Come-First-Served)
+Overview
 
-## 📌 Project Overview
+This project demonstrates a Hotel Booking Management System that handles booking requests in a fair, first-come-first-served manner. It focuses on core Java concepts and fundamental data structures, showing how queues can manage simultaneous requests while preserving order and fairness.
 
-**Book My Stay App** is a Hotel Booking Management System designed to demonstrate the practical application of **Core Java** and fundamental **data structures** in real-world scenarios.
+Use Case 5: Booking Request
 
-The project is developed incrementally through multiple use cases. Each use case focuses on solving common software engineering challenges such as:
+Goal:
+Handle multiple booking requests fairly by preserving the arrival order, without allocating rooms immediately.
 
-* Fair request handling
-* Inventory consistency
-* Prevention of double-booking
+Actors:
 
-This approach emphasizes understanding **how and why data structures are used** in scalable and maintainable systems.
+Reservation – Represents a guest’s booking intent.
+Booking Request Queue – Stores incoming booking requests in FIFO order.
 
----
+Flow:
 
-## 🚀 Use Case 1: Application Entry & Welcome Message
+Guest submits a booking request.
+Request is added to the booking queue.
+Requests are stored in arrival order.
+Requests wait for processing; no inventory mutation occurs at this stage.
+Key Concepts
+Queue Data Structure: Queue<Reservation> using LinkedList ensures FIFO processing.
+FIFO Principle: Guarantees fairness; earliest requests are processed first.
+Decoupling Intake from Allocation: Requests are collected first and processed later, enabling controlled allocation during peak demand.
+Key Requirements
+Accept booking requests from guests.
+Store requests in a queue structure.
+Preserve request arrival order.
+Avoid any room allocation at this stage.
+Prepare requests for subsequent processing.
+Benefits
+Fair and deterministic booking request handling.
+Predictable system behavior under peak load.
+Simplified request coordination before allocation.
+How to Compile and Run
+javac UseCase5BookingRequestQueue.java
+java UseCase5BookingRequestQueue
+Sample Output
+=== Welcome to Book My Stay (Booking Request Queue) ===
 
-### 🎯 Goal
+Options:
+1. Submit Booking Request
+2. View Booking Queue
+3. Exit
+   Enter choice: 1
+   Enter guest name: Alice
+   Enter number of rooms: 2
+   Booking request added for Alice
 
-To establish a clear and predictable starting point for the application by demonstrating how a Java program begins execution and produces console output.
+Options:
+1. Submit Booking Request
+2. View Booking Queue
+3. Exit
+   Enter choice: 1
+   Enter guest name: Bob
+   Enter number of rooms: 1
+   Booking request added for Bob
 
----
+Options:
+1. Submit Booking Request
+2. View Booking Queue
+3. Exit
+   Enter choice: 2
 
-## 👤 Actor
-
-* User (runs the application via command line or IDE)
-
----
-
-## 🔄 Application Flow
-
-1. User runs the application
-2. JVM invokes the `main()` method
-3. Application prints a welcome message
-4. Displays application name and version
-5. Application terminates
-
----
-
-## 🧠 Key Concepts Covered
-
-* **Class** – Defines the structure and acts as a container for the program
-* **main() Method** – Entry point of the Java application
-* **static Keyword** – Allows execution without object creation
-* **Console Output** – Using `System.out.println()`
-* **String Literals** – Immutable text values stored in memory
-* **Method Invocation** – Calling methods on objects
-* **Application Flow** – Sequential execution of statements
-* **JavaDoc Comments** – Documentation for maintainability
-* **JavaDoc Annotations** – Metadata like `@author`, `@version`
-
----
-
-## ✅ Requirements
-
-* Create a Java class as the entry point
-* Implement `public static void main(String[] args)`
-* Print welcome message
-* Display application name and version
-* Use JavaDoc comments
-* Ensure error-free execution
-
----
-
-## 💡 Key Benefits
-
-* Clear and predictable startup behavior
-* Single entry point for execution
-* Easy debugging for beginners
-
----
-
-## 🛠️ How to Compile and Run
-
-### Step 1: Compile
-
-```bash
-javac UseCase1HotelBookingApp.java
-```
-
-### Step 2: Run
-
-```bash
-java UseCase1HotelBookingApp
-```
-
----
-
-## 📤 Sample Output
-
-```
-Welcome to Book My Stay App!
-Application Name: Hotel Booking System
-Version: v1.0
-Application started successfully. Exiting now...
-```
-
----
-
-## 📁 Project Structure
-
-```
-BookMyStayApp/
-│── UseCase1HotelBookingApp.java
-│── README.md
-```
-
----
-
-## 🔮 Future Enhancements
-
-* User input handling
-* Room inventory management
-* Booking system with validation
-* Data structure integration (Queues, Maps, etc.)
-* Prevention of double booking
-
----
-
-## 👨‍💻 Author
-
-Your Name
-
----
+Current Booking Queue (FIFO order):
+Reservation{Guest='Alice', Rooms=2}
+Reservation{Guest='Bob', Rooms=1}
