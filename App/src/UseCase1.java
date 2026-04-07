@@ -76,8 +76,8 @@ class InventoryManager {
     }
 }
 
-// Main program
-public class UseCase9ErrorHandlingValidation {
+// Main program with corrected class name
+public class UseCase9-ExceptionHandling {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         InventoryManager inventoryManager = new InventoryManager();
